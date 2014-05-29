@@ -1,0 +1,19 @@
+/**
+ * 庄家，负责洗牌、发牌、比较扑克牌的大小
+ */
+
+/**
+ * @author HYC
+ *
+ */
+public class Banker {
+	Card[] cards;
+	//玩家数量
+	int playerNumb;
+	public Banker() {
+		//各个玩家准备就绪
+	}
+	//洗牌
+	//初始化玩家
+	//发牌
+}

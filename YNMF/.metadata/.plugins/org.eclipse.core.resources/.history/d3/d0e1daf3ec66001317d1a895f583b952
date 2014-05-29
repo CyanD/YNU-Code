@@ -1,0 +1,177 @@
+package com.sys.model;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Transient;
+
+import static javax.persistence.GenerationType.IDENTITY;
+
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+/**
+ * Module entity. @author MyEclipse Persistence Tools
+ */
+@Entity
+@Table(name = "module", catalog = "ccb")
+public class Module implements java.io.Serializable {
+
+	// Fields
+
+	private Long id;
+	private String moudleName;
+	private Long pid;
+	private String moduleno;
+	private String largeicon;
+	private String smallicon;
+	private String url;
+	private String mtarget;
+	private String mclvl;
+	private Long displayorder;
+	private Set<Moulefunction> moulefunctions = new HashSet<Moulefunction>(0);
+
+	// Constructors
+
+	/** default constructor */
+	public Module() {
+	}
+
+	/** full constructor */
+	public Module(String moudleName, Long pid, String moduleno,
+			String largeicon, String smallicon, String url, String mtarget,
+			String mclvl, Long displayorder, Set<Moulefunction> moulefunctions) {
+		this.moudleName = moudleName;
+		this.pid = pid;
+		this.moduleno = moduleno;
+		this.largeicon = largeicon;
+		this.smallicon = smallicon;
+		this.url = url;
+		this.mtarget = mtarget;
+		this.mclvl = mclvl;
+		this.displayorder = displayorder;
+		this.moulefunctions = moulefunctions;
+	}
+
+	// Property accessors
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
+	public Long getId() {
+		return this.id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	@Column(name = "moudleName", length = 20)
+	public String getMoudleName() {
+		return this.moudleName;
+	}
+
+	public void setMoudleName(String moudleName) {
+		this.moudleName = moudleName;
+	}
+
+	@Column(name = "pid")
+	public Long getPid() {
+		return this.pid;
+	}
+
+	public void setPid(Long pid) {
+		this.pid = pid;
+	}
+
+	@Column(name = "moduleno", length = 20)
+	public String getModuleno() {
+		return this.moduleno;
+	}
+
+	public void setModuleno(String moduleno) {
+		this.moduleno = moduleno;
+	}
+
+	@Column(name = "largeicon")
+	public String getLargeicon() {
+		return this.largeicon;
+	}
+
+	public void setLargeicon(String largeicon) {
+		this.largeicon = largeicon;
+	}
+
+	@Column(name = "smallicon")
+	public String getSmallicon() {
+		return this.smallicon;
+	}
+
+	public void setSmallicon(String smallicon) {
+		this.smallicon = smallicon;
+	}
+
+	@Column(name = "url")
+	public String getUrl() {
+		return this.url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	@Column(name = "mtarget", length = 50)
+	public String getMtarget() {
+		return this.mtarget;
+	}
+
+	public void setMtarget(String mtarget) {
+		this.mtarget = mtarget;
+	}
+
+	@Column(name = "mclvl", length = 1)
+	public String getMclvl() {
+		return this.mclvl;
+	}
+
+	public void setMclvl(String mclvl) {
+		this.mclvl = mclvl;
+	}
+
+	@Column(name = "displayorder")
+	public Long getDisplayorder() {
+		return this.displayorder;
+	}
+
+	public void setDisplayorder(Long displayorder) {
+		this.displayorder = displayorder;
+	}
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "module")
+	public Set<Moulefunction> getMoulefunctions() {
+		return this.moulefunctions;
+	}
+
+	public void setMoulefunctions(Set<Moulefunction> moulefunctions) {
+		this.moulefunctions = moulefunctions;
+	}
+	
+	   @Transient //注意Transient表示该列不需要持久化
+	    private boolean isLeaf;
+
+	    @Transient
+	    public boolean isIsLeaf() {
+	        return isLeaf;
+	    }
+
+	    @Transient
+	    public void setIsLeaf(boolean isLeaf) {
+	        this.isLeaf = isLeaf;
+	    }
+
+}

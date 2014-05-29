@@ -1,0 +1,128 @@
+package com.com.services.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.com.model.Company;
+import com.com.services.ICompanyService;
+import com.core.paging.Page;
+import com.jpa.BaseDAO;
+import com.sys.model.Module;
+import com.sys.services.IModuleService;
+
+
+/**
+ * @版权：
+ * @作者：丁强龙
+ * @创建时间:2013年11月29日
+ * @模块功能：
+ * @修改记录： 1. 2.
+ */
+@Service("companyService")
+public class CompanyService extends BaseDAO<Company> implements ICompanyService {
+
+	public CompanyService() {
+	}
+
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	public Company findById(long id) {
+		return super.find(id);
+	}
+
+	public void removeById(long id) {
+		removeByClause("Company", " where id=" + id);
+		// super.delete(id);
+	}
+
+	public void removeByClause(String clause) {
+		removeByClause("Company", clause);
+	}
+
+	/**
+	 * 通过条件从句删除数据
+	 * 
+	 * @param objName
+	 * @param clause
+	 */
+	@SuppressWarnings("unchecked")	
+	private void removeByClause(String objName, String clause) {
+
+		try {
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("delete from Company");
+			
+			if (clause != null && !"".equals(clause)) {
+				sb.append(clause);
+			}
+			Query query1 = em.createQuery(sb.toString());// session.createQuery(sb.toString());
+			query1.executeUpdate();
+			
+		} catch (RuntimeException re) {
+
+			throw re;
+		}
+	}
+
+	@Override
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	public List<Company> findByClasuse(String clause) {
+		return super.findByClause(clause);
+	}
+
+	@Override
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	public List<Company> findPageByClasuse(String clause, Page page) {
+		int _allRow = super.getCount(clause);
+		page.init(_allRow, page.getCurrentPage(),
+				page.getPageSize() > 0 ? page.getPageSize() : Page.PAGE_SIZE);
+		return super.findPageByClasuse(page, clause);
+	}
+
+	
+	public void addOrUpdateCompany(Company obj) {
+		boolean newFlag = false;
+
+		if (obj.getId() != null && obj.getId() > 0) {
+			super.update(obj);
+		} else {
+			newFlag = true;
+			//EntityTransaction trans = null;
+			try {
+				//trans = em.getTransaction();
+				//trans.begin();
+				 obj.setId(null);
+				super.save(obj);
+//				addDefaultModuleFunToDB(obj);
+				//trans.commit();
+			} catch (Exception ex) {
+				log.error("addOrUpdateCompany>>>>>"+ex.getMessage());
+				//if (trans != null) {
+				//	trans.rollback();
+				//}
+			}
+		}
+
+		// super.save(obj);
+
+		if (newFlag) {
+			// addDefaultModuleFunToDB(obj);
+		}
+
+	}
+
+	@Override
+	@Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+	public Company findOneByClasuse(String clause) {
+		return super.findOneByClause(clause);
+	}
+	
+
+}

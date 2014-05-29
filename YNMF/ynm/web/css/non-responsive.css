@@ -1,0 +1,80 @@
+BODY {
+	MIN-WIDTH: 970px; PADDING-BOTTOM: 30px; PADDING-TOP: 70px
+}
+.page-header {
+	MARGIN-BOTTOM: 30px
+}
+.page-header .lead {
+	MARGIN-BOTTOM: 10px
+}
+.container {
+	WIDTH: 970px; MAX-WIDTH: none !important
+}
+
+.col-xs-4 {
+	BORDER-BOTTOM: #ddd 1px solid; BORDER-LEFT: #ddd 1px solid; PADDING-BOTTOM: 15px; BACKGROUND-COLOR: #eee; BORDER-TOP: #ddd 1px solid; BORDER-RIGHT: #ddd 1px solid; PADDING-TOP: 15px
+}
+
+.container .navbar-header {
+	MARGIN-LEFT: 0px; MARGIN-RIGHT: 0px
+}
+.container .navbar-collapse {
+	MARGIN-LEFT: 0px; MARGIN-RIGHT: 0px
+}
+.navbar-header {
+	FLOAT: left
+}
+.navbar-collapse {
+	PADDING-BOTTOM: 0px; DISPLAY: block !important; HEIGHT: auto !important; OVERFLOW: visible !important
+}
+.navbar-toggle {
+	DISPLAY: none
+}
+.navbar-collapse {
+	BORDER-TOP: 0px
+}
+.navbar-brand {
+	MARGIN-LEFT: -15px
+}
+.navbar-nav {
+	MARGIN: 0px; FLOAT: left
+}
+.navbar-nav > LI {
+	FLOAT: left
+}
+.navbar-nav > LI > A {
+	PADDING-BOTTOM: 15px; PADDING-LEFT: 15px; PADDING-RIGHT: 15px; PADDING-TOP: 15px
+}
+.navbar-right.navbar-nav {
+	FLOAT: right
+}
+.navbar .navbar-nav .open .dropdown-menu {
+	BORDER-BOTTOM: #cccccc 1px solid; POSITION: absolute; BORDER-LEFT: #cccccc 1px solid; BACKGROUND-COLOR: #fff; FLOAT: left; BORDER-TOP: #cccccc 0px solid; BORDER-RIGHT: #cccccc 1px solid; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175); border-radius: 0 0 4px 4px; -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175)
+}
+.navbar-default .navbar-nav .open .dropdown-menu > LI > A {
+	COLOR: #333
+}
+.navbar .navbar-nav .open .dropdown-menu > LI > A:hover {
+	BACKGROUND-COLOR: #428bca !important; COLOR: #fff !important
+}
+.navbar .navbar-nav .open .dropdown-menu > LI > A:focus {
+	BACKGROUND-COLOR: #428bca !important; COLOR: #fff !important
+}
+.navbar .navbar-nav .open .dropdown-menu > .active > A {
+	BACKGROUND-COLOR: #428bca !important; COLOR: #fff !important
+}
+.navbar .navbar-nav .open .dropdown-menu > .active > A:hover {
+	BACKGROUND-COLOR: #428bca !important; COLOR: #fff !important
+}
+.navbar .navbar-nav .open .dropdown-menu > .active > A:focus {
+	BACKGROUND-COLOR: #428bca !important; COLOR: #fff !important
+}
+.navbar .navbar-nav .open .dropdown-menu > .disabled > A {
+	BACKGROUND-COLOR: transparent !important; COLOR: #999 !important
+}
+.navbar .navbar-nav .open .dropdown-menu > .disabled > A:hover {
+	BACKGROUND-COLOR: transparent !important; COLOR: #999 !important
+}
+.navbar .navbar-nav .open .dropdown-menu > .disabled > A:focus {
+	BACKGROUND-COLOR: transparent !important; COLOR: #999 !important
+}

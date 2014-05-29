@@ -1,0 +1,31 @@
+/**
+ * 裁判，用来判断大小，期望，概率，等
+ */
+
+/**
+ * @author HYC
+ *
+ */
+public class Judge {
+	private Deck[] deck;
+
+	public Judge(Deck[] deck) {
+		super();
+		this.deck = deck;
+	}
+
+	public Judge() {
+		super();
+		this.deck=null;
+	}
+
+	public Deck[] getDeck() {
+		return deck;
+	}
+
+	public void setDeck(Deck[] deck) {
+		this.deck = deck;
+	}
+	public 
+	
+}

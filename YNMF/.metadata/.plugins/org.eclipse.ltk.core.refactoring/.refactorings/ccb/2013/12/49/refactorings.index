@@ -1,0 +1,27 @@
+1385880031062	Rename type 'RolePermAction'
+1385880386913	Copy compilation unit
+1385880536236	Copy compilation unit
+1385880572335	Rename type 'ICompanyService'
+1385880644500	Copy compilation unit
+1385880655951	Rename type 'CompanyService'
+1385881523531	Copy compilation unit
+1385881645643	Rename type 'IRoleFacade'
+1385881696375	Delete element
+1385881711117	Rename type 'RoleFacade'
+1385882098118	Delete element
+1385882734737	Rename resource 'permManaResult.jsp'
+1385899216275	Rename type 'TModuleNodeUtil'
+1385899258346	Rename type 'TEntityNodeUtil'
+1385900019449	Copy compilation unit
+1385900146818	Delete element
+1385900169124	Rename type 'CopyOfTEntAttNodeUtil'
+1385900538953	Copy compilation unit
+1385900604728	Copy compilation unit
+1386171241971	Rename type 'RolePermAction'
+1386171639674	Delete element
+1386172509395	Copy compilation unit
+1386202815465	Rename type 'IRolePermFacade'
+1386202897653	Rename type 'IRolePermService'
+1386207708475	Rename type 'RolePermFacade'
+1386208282166	Rename resource 'permManaResult.jsp'
+1386208918489	Rename type 'RolePermAction'

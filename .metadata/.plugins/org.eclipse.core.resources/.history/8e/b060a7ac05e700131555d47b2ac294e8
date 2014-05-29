@@ -1,0 +1,4 @@
+public class DeckandIndex {
+	Deck deck;
+	int index;
+}

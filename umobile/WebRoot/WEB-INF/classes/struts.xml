@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<!-- 
+    <constant name="struts.enable.DynamicMethodInvocation" value="false" />
+    <constant name="struts.devMode" value="false" />-->
+	<constant name="struts.devMode" value="true" />
+	 <constant name="struts.i18n.encoding" value="UTF-8" />
+    <!-- <package name="default" namespace="/" extends="struts-default">
+        <default-action-ref name="index" />
+        <global-results>
+            <result name="login">/login.jsp</result>
+        </global-results> 
+       <global-exception-mappings>
+            <exception-mapping exception="java.lang.Exception" result="error"/>
+        </global-exception-mappings>
+        <action name="index">
+                <result type="redirect">/login.jsp</result>
+        </action>
+    </package> -->
+	 <package name="umobile" extends="struts-default">
+	 		<interceptors>
+				<interceptor name="loginInterceptor" class="com.interceptor.LoginInterceptor">
+				</interceptor>
+				<interceptor-stack name="myStack">
+					<interceptor-ref name="loginInterceptor"></interceptor-ref>
+					<interceptor-ref name="defaultStack"></interceptor-ref>
+				</interceptor-stack>
+			</interceptors>
+			<default-interceptor-ref name="myStack"></default-interceptor-ref>
+			<default-action-ref name="index" />
+			<global-results>
+            <result name="login">/login.jsp</result>
+        	</global-results> 
+	 </package>
+ 	<package name="login"  extends="struts-default">
+	 	<action name="login" class="loginAction" >
+            <result name="success">/WEB-INF/login_success.jsp</result>
+            <result name="image" type="stream">
+                 <param name="contentType">image/jpeg</param>
+                 <param name="inputName">imageStream</param>
+                 <param name="bufferSize">2048</param>
+             </result>
+            <result name="login">/login.jsp</result>
+        </action>
+        <action name="index" >
+            <result type="redirect">/login.jsp</result>
+        </action>
+    </package>
+     
+     <package name="publicservice"  namespace="/publicservice" extends="umobile">
+	 	<action name="publicserviceActivity" class="publicserviceActivityAction" >
+            <result name="success">/WEB-INF/publicservice/publicserviceActivity_success.jsp</result>
+            <result name="showDetail">/WEB-INF/publicservice/showDetail_success.jsp</result>
+        </action>
+        <action name="teacherHomeKind" class="teacherHomeKindAction" >
+            <result name="success">/WEB-INF/publicservice/teacherHomeKind_success.jsp</result>
+        </action>
+        <action name="teacherHome" class="teacherHomeAction" >
+            <result name="success">/WEB-INF/publicservice/teacherHome_success.jsp</result>
+            <result name="showDetail">/WEB-INF/publicservice/showTeacherHomeDetail_success.jsp</result>
+        </action>
+        
+        <action name="studentFieldKind" class="studentFieldKindAction" >
+            <result name="success">/WEB-INF/publicservice/studentFieldKind_success.jsp</result>
+        </action>
+        <action name="studentField" class="studentFieldAction" >
+            <result name="success">/WEB-INF/publicservice/studentField_success.jsp</result>
+            <result name="showDetail">/WEB-INF/publicservice/showStudentFieldDetail_success.jsp</result>
+        </action>
+        <action name="ynuStory" class="ynuStoryAction" >
+            <result name="success">/WEB-INF/publicservice/ynuStory_success.jsp</result>
+            <result name="showDetail">/WEB-INF/publicservice/showYnuStoryDetail_success.jsp</result>
+        </action>
+    </package>
+    
+	 <package name="bus"  namespace="/bus" extends="umobile">
+	 	<action name="busRoute" class="busRouteAction" >
+            <result name="success">/WEB-INF/bus/busRoute_success.jsp</result>
+        </action>
+        <action name="busSchedule" class="busScheduleAction" >
+            <result name="success">/WEB-INF/busSchedule_success.jsp</result>
+        </action>
+    </package>
+    
+     <package name="calendar"  namespace="/calendar" extends="umobile">
+        <action name="calendarCategory" class="com.action.calendar.CalendarCategoryAction" >
+            <result name="success">/WEB-INF/calendar/schoolcalendar_success.jsp</result>
+        </action>
+        
+	 	<action name="schoolCalendar" class="com.action.calendar.SchoolCalendarAction" >
+            <result name="success">/WEB-INF/schoolcalendar1_success.jsp</result>
+        </action>
+        <action name="schoolCalendarSub" class="com.action.calendar.SchoolCalendarSubAction" >
+            <result name="success">/WEB-INF/schoolcalendarSub_success.jsp</result>
+        </action>
+    </package>
+    
+    <package name="sys"  namespace="/sys" extends="umobile">
+	 	<action name="sysUser" class="sysUserAction" >
+            <result name="success">/WEB-INF/sys/sysUser_success.jsp</result>
+        </action>
+	 	<action name="sysDept" class="sysDeptAction" >
+            <result name="success">/WEB-INF/sys/sysDept_success.jsp</result>
+        </action>
+	 	<action name="sysRole" class="sysRoleAction" >
+            <result name="success">/WEB-INF/sys/sysRole_success.jsp</result>
+        </action>
+	 	<action name="newsNewsCategory" class="newsNewsCategoryAction" >
+            <result name="success">/WEB-INF/sys/newsNewsCategory_success.jsp</result>
+        </action>
+	 	<action name="newsAlbumCategory" class="newsAlbumCategoryAction" >
+            <result name="success">/WEB-INF/sys/newsAlbumCategory_success.jsp</result>
+        </action>
+	 	<action name="sysNews" class="sysNewsAction" >
+            <result name="success">/WEB-INF/sys/sysNews_success.jsp</result>
+        </action>
+    </package>
+    <package name="public"  namespace="/public" extends="umobile">
+	 	<action name="public" class="publicAction" >
+        </action>
+    </package>
+    <package name="news"  namespace="/news" extends="umobile">
+	 	<action name="newsAlbum" class="newsAlbumAction" >
+            <result name="success">/WEB-INF/news/newsAlbum_success.jsp</result>
+            <result name="showDetail">/WEB-INF/news/showDetail_success.jsp</result>
+        </action>
+	 	<action name="newsNews" class="newsNewsAction" >
+            <result name="success">/WEB-INF/news/newsNews_success.jsp</result>
+            <result name="showDetail">/WEB-INF/news/showNewsDetail_success.jsp</result>
+        </action>
+        <action name="newsNewsPicture" class="newsNewsPictureAction" >
+            <result name="success">/login.jsp</result>
+            <result name="initBatchEdit">/WEB-INF/news/batchEdit_success.jsp</result>
+        </action>
+        <action name="newsAlbumPicture" class="newsAlbumPictureAction" >
+            <result name="success">/login.jsp</result>
+            <result name="initBatchEdit">/WEB-INF/news/albumbatchEdit_success.jsp</result>
+        </action>
+    </package>
+    <package name="addressbook"  namespace="/addressbook" extends="umobile">
+	 	<action name="addressbookPublic" class="addressbookPublicAction" >
+            <result name="success">/WEB-INF/addressbook/addressbookPublic_success.jsp</result>
+        </action>
+
+        <action name="addressbookAlumni" class="addressbookAlumniAction" >
+            <result name="success">/WEB-INF/addressbook/addressbookAlumni_success.jsp</result>
+        
+        </action>
+
+	 	<action name="addressbookDept" class="addressbookDeptAction" >
+            <result name="success">/WEB-INF/addressbook/addressbookDept_success.jsp</result>
+        </action>
+	 	<action name="addressbookDepartment" class="addressbookDepartmentAction" >
+            <result name="success">/WEB-INF/addressbook/addressbookDepartment_success.jsp</result>
+        </action>
+	 	<action name="addressbookDeptSystem" class="addressbookDeptSystemAction" >
+            <result name="success">/WEB-INF/addressbook/addressbookDeptSystem_success.jsp</result>
+        </action>
+	 	<action name="addressbookWork" class="addressbookWorkAction" >
+            <result name="success">/WEB-INF/addressbook/addressbookWork_success.jsp</result>
+        </action>
+
+     </package>
+    <package name="course"  namespace="/course" extends="umobile">
+	 	<action name="courseCategory" class="courseCategoryAction" >
+	 		<result name="success">/WEB-INF/course/courseCategory_success.jsp</result>
+        </action>
+	 	<action name="courseCourse" class="courseCourseAction" >
+	 		<result name="success">/WEB-INF/course/courseCourse_success.jsp</result>
+	 		<result name="showDetail">/WEB-INF/course/showCourseDetail_success.jsp</result>
+        </action>
+	 	<action name="courseVideo" class="courseVideoAction" >
+	 		<result name="success">/WEB-INF/course/courseVideo_success.jsp</result>
+        </action>
+    </package>
+    <package name="notice"  namespace="/notice" extends="umobile">
+	 	<action name="noticeCategory" class="noticeCategoryAction" >
+	 		<result name="success">/WEB-INF/notice/noticeCategory_success.jsp</result>
+        </action>
+	 	<action name="notice" class="noticeAction" >
+	 		<result name="success">/WEB-INF/notice/notice_success.jsp</result>
+	 		<result name="showDetail">/WEB-INF/notice/showNoticeDetail_success.jsp</result>
+        </action>
+	 	<action name="noticeAccessories" class="noticeAccessoriesAction" >
+	 		<result name="success">/WEB-INF/notice/noticeAccessories_success.jsp</result>
+        </action>
+    </package>
+    <package name="download"  namespace="/download" extends="struts-default">
+	 	<action name="download" class="downloadAction" >
+			 <result name="image" type="stream">
+               <!--  <param name="contentType">image/png</param> -->
+                <param name="inputName">imageStream</param>
+                <param name="bufferSize">2048</param>
+            </result>
+			 <result name="file" type="stream">
+               <!--  <param name="contentType">image/png</param> -->
+               	<param name="contentDisposition">attachment;filename=${name}</param>
+                <param name="inputName">fileStream</param>
+                <param name="bufferSize">2048</param>
+            </result>
+        </action>
+    </package>
+    <package name="anniversary"  namespace="/anniversary" extends="umobile">
+	 	<action name="*" class="{1}Action" >
+            <result name="success">/WEB-INF/anniversary/{1}_success.jsp</result>
+        </action>
+    </package>
+
+</struts>

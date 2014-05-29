@@ -1,0 +1,449 @@
+package com.sys.actions;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sf.json.JSONArray;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.actions.BaseAction;
+import com.com.model.Company;
+import com.com.services.ICompanyService;
+import com.core.paging.ListRange;
+import com.core.paging.Page;
+import com.sys.model.Department;
+import com.sys.model.LoginUser;
+import com.sys.model.Module;
+import com.sys.model.Role;
+import com.sys.services.IDepartmentService;
+import com.sys.services.IRoleService;
+import com.trees.TNode;
+import com.util.StringUtil;
+import com.util.WebUtil;
+
+@Controller
+public class DepartmentAction extends BaseAction {
+	private List<Company> companys;
+	private Department department;
+	private List<Department> departments;
+	private List<Department> rootDepartments = null;
+	private Department parentDepartment = null;
+	private String pageparam = null;
+	private Page page = null;
+	@Resource(name = "departmentFacade")
+	private IDepartmentService departmentFacade = null;
+	
+	@Resource(name="roleService")
+	private IRoleService roleService=null;
+	private Role role;
+	
+	private String pagingParam;
+	private String nodes;
+	
+	@Resource(name = "companyService")
+	private ICompanyService companyService = null;
+	private String sqlClause;
+	private Company company = null;
+	private String sqlClause1;
+	public DepartmentAction() {
+		department = new Department();
+		departments = new ArrayList<Department>();
+		parentDepartment = new Department();
+		rootDepartments = new ArrayList<Department>();
+		page = new Page();
+		company = new Company();
+		role= new Role();
+		companys=new ArrayList<Company>();
+	}
+
+	public Department getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(Department department) {
+		this.department = department;
+	}
+
+	public List<Department> getDepartments() {
+		return departments;
+	}
+
+	public void setDepartments(List<Department> departments) {
+		this.departments = departments;
+	}
+
+	public IDepartmentService getDepartmentFacade() {
+		return departmentFacade;
+	}
+
+	public void setDepartmentFacade(IDepartmentService departmentFacade) {
+		this.departmentFacade = departmentFacade;
+	}
+
+	public String getSqlClause() {
+		return sqlClause;
+	}
+
+	public void setSqlClause(String sqlClause) {
+		this.sqlClause = sqlClause;
+	}
+
+	public String getNodes() {
+		return nodes;
+	}
+
+	public void setNodes(String nodes) {
+		this.nodes = nodes;
+	}
+
+	public List<Department> getRootDepartments() {
+		return rootDepartments;
+	}
+
+	public void setRootDepartments(List<Department> rootDepartments) {
+		this.rootDepartments = rootDepartments;
+	}
+
+	public Department getParentDepartment() {
+		return parentDepartment;
+	}
+
+	public void setParentDepartment(Department parentDepartment) {
+		this.parentDepartment = parentDepartment;
+	}
+
+	public String getPageparam() {
+		return pageparam;
+	}
+
+	public void setPageparam(String pageparam) {
+		this.pageparam = pageparam;
+	}
+
+	public Page getPage() {
+		return page;
+	}
+
+	public void setPage(Page page) {
+		this.page = page;
+	}
+
+	public String getPagingParam() {
+		return pagingParam;
+	}
+
+	public void setPagingParam(String pagingParam) {
+		this.pagingParam = pagingParam;
+	}
+
+	
+	public ICompanyService getCompanyService() {
+		return companyService;
+	}
+
+	public void setCompanyService(ICompanyService companyService) {
+		this.companyService = companyService;
+	}
+
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
+	}
+	
+	public IRoleService getRoleService() {
+		return roleService;
+	}
+
+	public void setRoleService(IRoleService roleService) {
+		this.roleService = roleService;
+	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+	public String getSqlClause1() {
+		return sqlClause1;
+	}
+
+	public void setSqlClause1(String sqlClause1) {
+		this.sqlClause1 = sqlClause1;
+	}
+	@RequestMapping("/sys/depCompanys.do")
+	public void depCompanys(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		LoginUser tuser = MySecurityLoginInfo.getLoginUser(request);
+		if(tuser.getRole().getIssuper().equals("2")){
+			companys=this.companyService.findByClasuse("");
+		}else{
+			companys=this.companyService.findByClasuse("where id="+tuser.getCompany().getId());
+		}
+		
+		Map<String, Object> MapResult1 = new HashMap<String, Object>();
+		ArrayList<Map<String, Object>> semester1 = new ArrayList<Map<String, Object>>();
+		for(int i=0;i<companys.size();i++){
+			Map<String, Object> MapResult2 = new HashMap<String, Object>();
+			MapResult2.put("id",companys.get(i).getId());
+			MapResult2.put("companyName",companys.get(i).getCompanyName());
+			semester1.add(MapResult2);
+		}
+		MapResult1.put("companyList", semester1);
+		outJson(MapResult1, response);
+		
+	}
+
+	@RequestMapping("/sys/initDepartmentTree.do")
+	public String initDepartmentTree(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		this.company = WebUtil.request2Bean("company",request, Company.class);
+		LoginUser tuser = MySecurityLoginInfo.getLoginUser(request);
+		System.out.println(tuser.getCompany().getId());
+		if(tuser.getRole().getIssuper().equals("2") 
+				&& company.getId() !=null && company.getId()>0){//在前台页面点击某个公司，会传给后台 公司的ID，根据公司的ID来创建公司的架构，根节点为公司的名称
+			departments = departmentFacade.findByClasuse("where com_id="+company.getId());
+			company=companyService.findOneByClasuse("where id="+company.getId());
+			if(departments==null){
+				
+			}
+		}else {//if(!tuser.getIssuper().equals("2"))
+			sqlClause = "where com_id=" + tuser.getCompany().getId();
+			departments = departmentFacade.findByClasuse(sqlClause);
+			sqlClause1 = "where id=" + tuser.getCompany().getId();
+			company=companyService.findOneByClasuse(sqlClause1);
+		}
+		TDepartmentNodeUtil tmnu = new TDepartmentNodeUtil();
+		List<TNode> tnodes = tmnu.builderTNode(departments, departments, false,company);
+		departments = tmnu.getListByTree(tnodes);
+		nodes = JSONArray.fromObject(tnodes).toString();
+		//nodes = builderNodes(departments, tnodes);// JSONArray.fromObject(tnodes).toString();
+		request.setAttribute("nodes", nodes);
+		request.setAttribute("company", company);
+		return "/sys/departmentTreeResult";
+	}
+
+	@RequestMapping("/sys/findPageDepartments.do")
+	public String findPageDepartments() throws Exception {
+		page.createPageByPrama(page, pagingParam);
+		departments = departmentFacade.findPageByClasuse(sqlClause, page);
+		return "/sys/departmentTreeResult";
+	}
+
+	@RequestMapping("/sys/actNewDepartment.do")
+	public String actNewDepartment() throws Exception {
+
+		return "/sys/departmentEditResult";
+	}
+
+	@RequestMapping("/sys/actEditDepartment.do")
+	public String actEditDepartment() throws Exception {
+		rootDepartments = departmentFacade.findByClasuse(" where parentid=-1");
+		department = departmentFacade.findById(department.getId());
+		return "/sys/moduleEditResult";
+	}
+
+	@RequestMapping("/sys/addOrUpdateDepartment.do")
+	public void addOrUpdateDepartment(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		 this.department = WebUtil.request2Bean("department",request, Department.class);
+		 Company tcom = department.getCompany();
+		 if(tcom==null){
+			 tcom = new Company();
+			 department.setCompany(tcom);
+		 }
+		 tcom.setId(StringUtil.toLong(request.getParameter("department.company.id")));
+		 
+		if (department.getId() < 1) {
+			department.setId(null);
+		}
+		departmentFacade.addOrUpdateDepartment(department);
+
+		ListRange<Department> range = new ListRange<Department>();
+		List<Department> tDepartments = new ArrayList<Department>();
+		tDepartments.add(department);
+		range.setList(tDepartments);
+		range.setSuccess(true);
+		range.setMessage("success");
+		range.setTotalSize(1);
+		outJson(range, response);
+	}
+	@RequestMapping("/sys/removeDepartment.do")
+	public void removeDepartment(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		this.department = WebUtil.request2Bean("department", request, Department.class);
+		this.role=roleService.findOneByClasuse(" where dep_id='" + department.getId() + "'");
+		if(role==null){
+		departmentFacade.removeById(department.getId());
+		Map<String,Object> tmaps = new HashMap<String,Object>();
+		tmaps.put("message", "删除成功");
+		super.outJsonArray(tmaps, response);
+		}else if(role!=null&&role.getId()!=null){
+			Map<String,Object> tmaps = new HashMap<String,Object>();
+			tmaps.put("message", "请先删除相关的角色信息，再删除该信息！");
+			super.outJsonArray(tmaps, response);
+		}
+	}
+	private String builderNodes(List<Department> Department, List<TNode> tnodes) {
+		StringBuilder sb = new StringBuilder();
+		if (tnodes != null && tnodes.size() > 0) {
+			sb.append("[");
+			for (int i = 0; i < tnodes.size(); i++) {
+				if (i > 0) {
+					sb.append(",");
+				}
+				
+				
+				
+				sb.append("{");
+				// sb.append("Ti:\"").append(tnodes.get(i).getName()).append("\"");
+
+				Department nM = (Department) tnodes.get(i).getDatas();
+				Department pM = tnodes.get(i).getParentNode() == null ? null
+						: (Department) tnodes.get(i).getParentNode().getDatas();// findParentDEPARTMENT(allDEPARTMENTs,
+																				// DEPARTMENTs.get(i));
+
+				Long id = nM.getId();
+				if (nM != null) {
+					id = nM.getId();
+				}
+				Long pid = 0L;
+				if (pM != null) {
+					pid = pM.getId();
+				}
+				if (pid == null) {
+					pid = 0L;
+				}
+				sb.append("name:\"");
+				sb.append(nM.getDepName());
+				sb.append("\"");
+				sb.append(",id:");
+				sb.append(id);
+				sb.append(", pId:");
+				sb.append(pid);
+				sb.append(", SDEPARTMENTID:\"").append(nM.getId()).append("\"");
+				// sb.append(", DEPARTMENTNO:\"").append(StringUtil.toString(nM.getDEPARTMENTno())).append("\"");
+				sb.append(", DEPARTMENTNAME:\"")
+						.append(StringUtil.toString(nM.getDepName()))
+						.append("\"");
+				sb.append(", DEPARTMENTCOMNAME:\"")
+						.append(StringUtil.toString(nM.getCompany()
+								.getCompanyName())).append("\"");
+				sb.append(", DEPARTMENTCOMID:\"")
+						.append(StringUtil.toString(nM.getCompany().getId()))
+						.append("\"");
+				// sb.append(", LARGEICON:\"").append(StringUtil.toString(nM.getLargeicon())).append("\"");
+				// sb.append(", SMALLICON:\"").append(StringUtil.toString(nM.getSmallicon())).append("\"");
+				// sb.append(", URL:\"").append(StringUtil.toString(nM.getUrl())).append("\"");
+				// sb.append(", MTARGET:\"").append(StringUtil.toString(nM.getMtarget())).append("\"");
+				sb.append(", PARENTID:\"").append(nM.getPid()).append("\"");
+				sb.append(", PARENTDEPARTMENTNAME:\"")
+						.append(StringUtil.toString(pM == null ? "" : pM
+								.getDepName())).append("\"");
+				// sb.append(", MCLVL:\"").append(StringUtil.toString(nM.getMclvl())).append("\"");
+				// sb.append(", DISPLAYORDER:\"").append(nM.getDisplayorder()).append("\"");
+				sb.append(",Ti:\"");
+				sb.append(nM.getDepName());
+				sb.append("\"");
+
+				List<TNode> subNodes = tnodes.get(i).getChildren();
+				if (subNodes != null && subNodes.size() > 0) {
+					String subStr = builderNodesSub(subNodes);
+					sb.append(subStr);
+				}
+				sb.append("}\r\n");
+			}
+			sb.append("]");
+		}
+		return sb.toString();
+	}
+
+	private String builderNodesSub(List<TNode> subNodes) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(",open:true,children: [");
+		if (subNodes != null && subNodes.size() > 0) {
+			for (int i = 0; i < subNodes.size(); i++) {
+
+				if (i > 0) {
+					sb.append(",");
+				}
+				sb.append("{");
+				// sb.append("Ti:\"").append(tnodes.get(i).getName()).append("\"");
+
+				Department nM = (Department) subNodes.get(i).getDatas();
+				Department pM = subNodes.get(i).getParentNode() == null ? null
+						: (Department) subNodes.get(i).getParentNode()
+								.getDatas();// findParentDEPARTMENT(allDEPARTMENTs,
+											// DEPARTMENTs.get(i));
+
+				Long id = nM.getId();
+				if (nM != null) {
+					id = nM.getId();
+				}
+				Long pid = 0L;
+				if (pM != null) {
+					pid = pM.getId();
+				}
+				if (pid == null) {
+					pid = 0L;
+				}
+
+				sb.append("name:\"");
+				sb.append(nM.getDepName());
+				sb.append("\"");
+				sb.append(",id:");
+				sb.append(id);
+				sb.append(", pId:");
+				sb.append(pid);
+				sb.append(", SDEPARTMENTID:\"").append(nM.getId()).append("\"");
+				// sb.append(", DEPARTMENTNO:\"").append(StringUtil.toString(nM.getDEPARTMENTno())).append("\"");
+				sb.append(", DEPARTMENTNAME:\"")
+						.append(StringUtil.toString(nM.getDepName()))
+						.append("\"");
+				sb.append(", DEPARTMENTCOMID:\"")
+				.append(StringUtil.toString(nM.getCompany().getId()))
+				.append("\"");
+				sb.append(", DEPARTMENTCOMNAME:\"")
+						.append(StringUtil.toString(nM.getCompany()
+								.getCompanyName())).append("\"");
+				// sb.append(", LARGEICON:\"").append(StringUtil.toString(nM.getLargeicon())).append("\"");
+				// sb.append(", SMALLICON:\"").append(StringUtil.toString(nM.getSmallicon())).append("\"");
+				// sb.append(", URL:\"").append(StringUtil.toString(nM.getUrl())).append("\"");
+				// sb.append(", MTARGET:\"").append(StringUtil.toString(nM.getMtarget())).append("\"");
+				sb.append(", PARENTID:\"").append(nM.getPid()).append("\"");
+				sb.append(", PARENTDEPARTMENTNAME:\"")
+						.append(StringUtil.toString(pM == null ? "" : pM
+								.getDepName())).append("\"");
+				// sb.append(", MCLVL:\"").append(StringUtil.toString(nM.getMclvl())).append("\"");
+				// sb.append(", DISPLAYORDER:\"").append(nM.getDisplayorder()).append("\"");
+				sb.append(",Ti:\"");
+				sb.append(nM.getDepName());
+				sb.append("\"");
+
+				List<TNode> subNodes2 = subNodes.get(i).getChildren();
+				if (subNodes2 != null && subNodes2.size() > 0) {
+					String subStr = builderNodesSub(subNodes2);
+					sb.append(subStr);
+				}
+				sb.append("}\r\n");
+			}
+		}
+		sb.append("]");
+		return sb.toString();
+	}
+
+}

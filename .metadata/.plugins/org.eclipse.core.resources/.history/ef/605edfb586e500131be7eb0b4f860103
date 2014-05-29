@@ -1,0 +1,33 @@
+
+public class Card {
+
+	int suit,rank;
+	String[] suits={"Clubs","Diamonds","Hearts","Spades"};
+	String[] ranks={"empty","Ace","2","3","4","5","6","7","8","9","10","Jack","Queen","King"};
+	/**
+	 * 空构造方法
+	 */
+	public Card() {
+		this.suit=0;
+		this.rank=0;
+	}
+	/**
+	 * @param suit
+	 * @param rank
+	 */
+	public Card(int suit, int rank) {
+		this.suit = suit;
+		this.rank = rank;
+	}
+	public void print(){
+		System.out.println(ranks[rank]+" of "+suits[suit]);
+	}
+	public int compareTo(Card c){
+	if(this.rank==1||c.rank==1){//有Ace的情况
+		return 0;		
+	}	
+	else{//两张牌中都不含有Ace
+		return 0;
+	}
+	}
+}

@@ -1,0 +1,108 @@
+package com.sys.services.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.Query;
+
+import org.springframework.stereotype.Service;
+
+import com.core.paging.Page;
+import com.jpa.BaseDAO;
+import com.sys.model.Entityattribute;
+import com.sys.model.Role;
+import com.sys.services.IEntAttService;
+import com.sys.services.IRoleService;
+
+
+/**
+ * @版权：昆明云金地科技有限公司
+ * @作者：丁强龙
+ * @创建时间:2012年8月21日
+ * @模块功能：
+ * @修改记录： 1. 2.
+ */
+@Service("entAttService")
+public class EntAttService extends BaseDAO<Entityattribute> implements IEntAttService {
+
+	public Entityattribute findById(long id) {
+		return super.find(id);
+	}
+
+	public void removeById(long id) {
+		removeByClause(id);
+	}
+
+	public void removeByClause(String clause) {
+		// removeByClause("Sysrole",clause);
+	}
+
+	/**
+	 * 通过条件从句删除数据
+	 * 
+	 * @param objName
+	 * @param clause
+	 */
+	@SuppressWarnings("unchecked")
+	private void removeByClause(long id) {
+
+		try {
+			// TODO 20131007
+			StringBuilder sb = new StringBuilder();
+			sb.append("delete from roleperm");
+			sb.append(" where rol_id =").append(id);
+
+			StringBuilder sb2 = new StringBuilder();
+			sb2.append("delete from role");
+			sb2.append(" where id=").append(id);
+
+			try {
+
+				// em.getTransaction().begin();
+				Query query1 = em.createQuery(sb.toString());// session.createQuery(sb.toString());
+				query1.executeUpdate();
+				Query query2 = em.createQuery(sb2.toString());// session.createQuery(sb.toString());
+				query2.executeUpdate();
+
+				// em.getTransaction().commit();
+				// em.clear();
+			} catch (Exception ex) {
+				// if (em.getTransaction() != null) {
+				// em.getTransaction().rollback();
+				// }
+			}
+			// log.info("deleteModuleByClauseWithTrans>>>>>ids:"+tOrgIds.toString()+"At:"+DateUtil.getNowString());
+
+		} catch (RuntimeException re) {
+
+			throw re;
+		}
+	}
+
+	@Override
+	public List<Entityattribute> findByClasuse(String clause) {
+		return super.findByClause(clause);
+	}
+
+	@Override
+	public List<Entityattribute> findPageByClasuse(String clause, Page page) {
+		int _allRow = super.getCount(clause);
+		page.init(_allRow, page.getCurrentPage(),
+				page.getPageSize() > 0 ? page.getPageSize() : Page.PAGE_SIZE);
+		return super.findPageByClasuse(page, clause);
+	}
+
+	public void addOrUpdateEntityattribute(Entityattribute obj) {
+		if (obj.getId() != null && obj.getId() > 0) {
+			super.update(obj);
+		} else {
+			super.save(obj);
+		}
+	}
+
+	@Override
+	public Entityattribute findOneByClasuse(String clause) {
+		return super.findOneByClause(clause);
+	}
+
+}

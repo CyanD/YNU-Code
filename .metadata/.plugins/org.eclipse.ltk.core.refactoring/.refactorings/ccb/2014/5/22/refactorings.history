@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">&#x0A;<refactoring comment="Rename resource &apos;ccb/web/WEB-INF/web.xml&apos; to &apos;web.xmll&apos;" description="Rename resource &apos;web.xml&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="web/WEB-INF/web.xml" name="web.xmll" stamp="1401023670056" updateReferences="true"/>&#x0A;<refactoring comment="Rename resource &apos;ccb/web/WEB-INF/web.xmll&apos; to &apos;web.xml&apos;" description="Rename resource &apos;web.xmll&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="web/WEB-INF/web.xmll" name="web.xml" stamp="1401023712758" updateReferences="true"/>
+</session>

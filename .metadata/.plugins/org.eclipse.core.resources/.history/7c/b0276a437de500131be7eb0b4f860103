@@ -1,0 +1,73 @@
+/**
+ * 庄家，负责洗牌、发牌、比较扑克牌的大小
+ */
+
+/**
+ * @author HYC
+ * 
+ */
+public class Banker extends Deck {
+	private int playerNumb;
+	 int eachSbuDeckNumb;// 各个手牌张数
+	
+	public int getPlayerNumb() {
+		return playerNumb;
+	}
+
+	public void setPlayerNumb(int playerNumb) {
+		this.playerNumb = playerNumb;
+	}
+
+	public int getEachSbuDeckNumb() {
+		return eachSbuDeckNumb;
+	}
+
+	public void setEachSbuDeckNumb(int eachSbuDeckNumb) {
+		this.eachSbuDeckNumb = eachSbuDeckNumb;
+	}
+
+	public Banker() {
+		// 各个玩家准备就绪
+		super();
+	}
+
+	// 为每个玩家发牌
+	public Deck[] initPlayer() {
+		if (eachSbuDeckNumb * playerNumb > 52) {
+			System.out.println("Error!");
+			return null;
+		}
+		else{
+			Deck[] decks=new Deck[this.eachSbuDeckNumb];
+			for(int i=0;i<this.eachSbuDeckNumb;i++){
+				decks[i]=subDeck(i*3,i*3+this.eachSbuDeckNumb-1);
+				System.out.println("fewfwe");
+			}
+			return decks;
+		}
+	}
+	//手牌
+	private Deck subDeck(int low,int high){
+		Deck sub=new Deck(high-low+1);
+		for(int i=0;i<=high-low;i++)
+		{
+			sub.cards[i]=this.cards[low+i];
+		}
+		return sub;
+	}
+	// 洗牌
+	public void shuffle() {
+		for (int i = 0; i < this.cards.length; i++) {
+			// 交换this.cards[i]和this.cards[randomInt(i,this.cards.length)]
+			Card temp = new Card();
+			int rnd = randomInt(i, this.cards.length - 1);
+			temp = this.cards[i];
+			this.cards[i] = this.cards[rnd];
+			this.cards[rnd] = temp;
+		}
+	}
+
+	private int randomInt(int low, int high) {
+		return (int) Math.round((high - (high - low) * (1 - Math.random())));
+	}
+}

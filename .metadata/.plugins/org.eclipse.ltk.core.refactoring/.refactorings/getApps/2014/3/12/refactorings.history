@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;AppInfo.java&apos; to &apos;T9Searcher/src/com.CyanD.T9searcher&apos;&#x0D;&#x0A;- Original project: &apos;getApps&apos;&#x0D;&#x0A;- Destination element: &apos;T9Searcher/src/com.CyanD.T9searcher&apos;&#x0D;&#x0A;- Original element: &apos;com.example.getapps.AppInfo.java&apos;" description="Copy compilation unit" destination="=T9Searcher/src&lt;com.CyanD.T9searcher" element1="/src&lt;com.example.getapps{AppInfo.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1395386663781" units="1" version="1.0"/>
+</session>

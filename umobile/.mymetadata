@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="umobile"
+  id="myeclipse.1345273571138"
+  context-root="/umobile"
+  j2ee-spec="6.0"
+  archive="umobile.war">
+  <attributes>
+    <attribute name="webrootdir" value="WebRoot" />
+  </attributes>
+</project-module>
+

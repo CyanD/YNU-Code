@@ -1,0 +1,11 @@
+/**
+ * 裁判，用来判断大小，期望，等等操作
+ */
+
+/**
+ * @author candlewill
+ *
+ */
+public class Judge {
+
+}

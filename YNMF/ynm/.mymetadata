@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="ccb"
+  id="myeclipse.1387781436291"
+  context-root="/ccb"
+  j2ee-spec="6.0"
+  archive="ccb.war">
+  <attributes>
+    <attribute name="webrootdir" value="web" />
+  </attributes>
+</project-module>
+

@@ -1,0 +1,14 @@
+create database YNU
+CREATE TABLE user (
+  id bigint(30) NOT NULL AUTO_INCREMENT,
+  userName varchar(30) NOT NULL,
+  password varchar(64) NOT NULL,
+  PRIMARY KEY (id)
+ )
+
+-- ----------------------------
+-- Records of user
+-- ----------------------------
+
+INSERT INTO `user` VALUES (1,'user','123');
+INSERT INTO `user` VALUES (2,'admin','admin');

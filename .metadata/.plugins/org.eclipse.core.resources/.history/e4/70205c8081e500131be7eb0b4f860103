@@ -1,0 +1,22 @@
+/**
+ * 裁判，用来判断大小，期望，概率，等
+ */
+
+/**
+ * @author candlewill
+ *
+ */
+public class Judge {
+	private Deck[] deck;
+
+	public Judge(Deck[] deck) {
+		super();
+		this.deck = deck;
+	}
+
+	public Judge() {
+		super();
+		this.deck=null;
+	}
+	
+}

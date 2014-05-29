@@ -1,0 +1,80 @@
+/**
+ * @版权：昆明云金地科技有限公司
+ * @作者：丁强龙
+ * @创建时间:2012年8月21日
+ * @模块功能：
+ * @修改记录： 1. 2.
+ */
+package com.sys.actions;
+
+
+import java.io.ByteArrayInputStream;
+import java.net.InetAddress;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+
+
+
+
+
+
+
+import javax.annotation.Resource;
+import javax.imageio.ImageIO;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.actions.BaseAction;
+import com.core.validate.VerificationCodeUtil;
+import com.sys.model.LoginUser;
+import com.sys.services.IUserFacade;
+import com.util.WebUtil;
+
+
+
+
+
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+@Controller
+public class LoginAction extends HttpServlet {
+
+    /**
+	 * DQL
+	 */
+	private static final long serialVersionUID = -175016157364925587L;
+	
+	private ByteArrayInputStream imageStream;
+   
+    
+    private static org.apache.log4j.Logger log = org.apache.log4j.LogManager.getLogger(LoginAction.class);
+//    private List<Sysrolepermissions> rolePerms;
+
+    public LoginAction() {
+       
+       
+       
+    }
+
+    
+    @RequestMapping("/sys/showLoginImageCode.do")
+    public void showLoginImageCode(HttpServletRequest request,HttpServletResponse response) throws Exception {
+    	VerificationCodeUtil vcu = VerificationCodeUtil.Instance();   
+    	//imageStream=vcu.getImage();   
+    	String  securityCode = vcu.getVerificationCodeValue().toLowerCase();
+    	response.setContentType("image/jpeg");
+    	ImageIO.write(vcu.getBufImage(), "JPEG", response.getOutputStream());
+    	request.getSession().setAttribute("SECURITYCODE", securityCode);
+        
+    }
+}

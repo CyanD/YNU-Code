@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
+		<item value="273" key="DIALOG_WIDTH"/>
+		<item value="337" key="DIALOG_Y_ORIGIN"/>
+		<item value="399" key="DIALOG_HEIGHT"/>
+		<item value="334" key="DIALOG_X_ORIGIN"/>
+		<item value="1|微软雅黑|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|微软雅黑" key="DIALOG_FONT_NAME"/>
+	</section>
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
+		<item value="true" key="wrap"/>
+		<item value="false" key="isRegEx"/>
+		<item value="false" key="casesensitive"/>
+		<item value="false" key="incremental"/>
+		<item value="false" key="wholeword"/>
+		<item value="DealPmForUpdate" key="selection"/>
+		<list key="findhistory">
+			<item value="DealPmForUpdate"/>
+			<item value="save"/>
+			<item value="id.funlvl"/>
+			<item value="id.fid=&apos;3&apos;"/>
+			<item value="id.fid=3"/>
+			<item value="id.fid"/>
+			<item value="modulefuns"/>
+			<item value="findPageCompanys2"/>
+		</list>
+		<list key="replacehistory">
+			<item value="funlvl"/>
+			<item value="id.fid=&apos;3&apos;"/>
+			<item value="Role"/>
+			<item value="${pageContext.request.contextPath}"/>
+			<item value="Module"/>
+			<item value="getMoudleName"/>
+			<item value="style=&quot;width: 180px&quot;"/>
+			<item value="&lt;/c:when&gt;"/>
+		</list>
+	</section>
+</section>

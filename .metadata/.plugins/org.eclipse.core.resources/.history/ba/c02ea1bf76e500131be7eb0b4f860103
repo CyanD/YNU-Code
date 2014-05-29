@@ -1,0 +1,43 @@
+/**
+ * 庄家，负责洗牌、发牌、比较扑克牌的大小
+ */
+
+/**
+ * @author HYC
+ * 
+ */
+public class Banker extends Deck {
+	int playerNumb;
+	int eachSbuDeckNumb;// 各个手牌张数
+
+	public Banker() {
+		// 各个玩家准备就绪
+		super();
+	}
+
+	// 初始化玩家
+	public void initPlayer() {
+		if (eachSbuDeckNumb * playerNumb > 52) {
+			System.out.println("Error!");
+			break;
+		}
+	}
+
+	// 洗牌
+	public void shuffle() {
+		for (int i = 0; i < this.cards.length; i++) {
+			// 交换this.cards[i]和this.cards[randomInt(i,this.cards.length)]
+			Card temp = new Card();
+			int rnd = randomInt(i, this.cards.length - 1);
+			temp = this.cards[i];
+			this.cards[i] = this.cards[rnd];
+			this.cards[rnd] = temp;
+		}
+	}
+
+	private int randomInt(int low, int high) {
+		return (int) Math.round((high - (high - low) * (1 - Math.random())));
+	}
+	// 初始化玩家
+	// 发牌
+}

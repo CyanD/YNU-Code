@@ -1,0 +1,25 @@
+
+public class YCOS {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		System.out.println("全部扑克牌：");
+		Banker bk=new Banker();
+		bk.shuffle();
+		bk.print();
+		bk.setEachSbuDeckNumb(3);
+		bk.setPlayerNumb(5);
+		System.out.println("总张数：");
+		System.out.println(bk.cards.length);
+		
+		Deck[] decks=bk.initPlayer();
+		System.out.println("");
+		for(int i=0;i<decks.length;i++){
+			System.out.println("");
+			System.out.println(i);
+			decks[i].print();
+		}
+		}
+	}
+
+ 
