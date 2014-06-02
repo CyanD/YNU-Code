@@ -1,0 +1,140 @@
+﻿<!DOCTYPE html>
+<html>
+<head>    
+<meta charset="UTF-8">    
+<title>Basic CRUD Application - jQuery EasyUI CRUD Demo</title>    
+<link rel="stylesheet" type="text/css" href="../themes/default/easyui.css">    
+<link rel="stylesheet" type="text/css" href="../themes/icon.css">    
+<link rel="stylesheet" type="text/css" href="demo.css">    
+<script type="text/javascript" src="../jquery-1.7.2.min.js"></script>    
+<script type="text/javascript" src="../jquery.easyui.min.js"></script>
+
+
+															
+<style type="text/css">        
+#fm{            
+margin:0;            
+padding:10px 30px;        
+}        
+.ftitle{            
+font-size:14px;            
+font-weight:bold;            
+padding:5px 0;            
+margin-bottom:10px;            
+border-bottom:1px solid #ccc;        
+}        
+.fitem{            
+margin-bottom:5px;        
+}        
+.fitem label{            
+display:inline-block;            
+width:80px;        
+}    
+</style>
+
+
+</head>
+<body>      
+<table id="dg" title="商品信息" class="easyui-datagrid"   url="../Productlist.do"  toolbar="#toolbar" pagination="true"  rownumbers="true" fitColumns="true" singleSelect="true">        
+<thead>            
+	<tr>                
+		<th field="productname" width="50">商品名称</th>                
+		<th field="producttypename" width="50">商品类型</th>                
+		<th field="productpic" width="50">商品图片</th>                
+		<th field="productinfo" width="150">商品简介</th>   
+		<th field="productprice" width="50">商品价格</th>                
+		<th field="productsum" width="50">商品数量</th>                
+		<th field="showtime" width="80">上架时间</th>                
+		<th field="deletetime" width="80">下架时间</th> 
+		<th field="username" width="50">所属卖家</th>
+	</tr>        
+</thead>    
+</table>    
+<div id="toolbar">        
+<div style="float:left;" >
+<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newUser()">增加</a>        
+<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editUser()">修改</a>        
+<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="destroyUser()">删除</a>
+</div><div style="float:right;margin-top:3px">
+<input  class="easyui-searchbox" style="width:200px;"  data-options="prompt:'请输入关键字'"></input>  
+</div>   
+</div>
+<div id="dlg" class="easyui-dialog" style="width:400px;height:380px;padding:10px 20px"            closed="true" buttons="#dlg-buttons">        
+<div class="ftitle">商品信息</div>        
+<form id="fm" method="post" novalidate>            
+<div class="fitem">                <label>商品名称:</label>                <input name="productname" class="easyui-validatebox" required="true">            </div>            
+<div class="fitem">                <label>商品类型:</label>                <input name="producttypeid" class="easyui-validatebox" required="true">          </div>         
+<div class="fitem">                <label>商品图片:</label>                <input name="productpic">            </div>           
+<div class="fitem">                <label>商品简介:</label>                <input name="productbinfo" class="easyui-validatebox">            </div>       
+<div class="fitem">                <label>商品价格:</label>                <input name="productprice" class="easyui-validatebox" required="true">            </div>            
+<div class="fitem">                <label>商品数量:</label>                <input name="productsum" class="easyui-validatebox" required="true">            </div>            
+<div class="fitem">                <label>上架时间:</label>                <input name="showtime"  class="easyui-datebox" required="required">            </div>           
+<div class="fitem">                <label>下架时间:</label>                <input name="deletetime" class="easyui-datebox" required="required">            </div>   
+<div class="fitem">                <label>所属卖家:</label>                <input name="userid" class="easyui-validatebox"  required="true">            </div>   
+</form>    
+</div>
+
+<div id="dlg-buttons">        
+<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveUser()">保存</a>       
+<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')">取消</a>   
+</div>   
+
+
+<script type="text/javascript">       
+var url;        
+function newUser(){            
+	$('#dlg').dialog('open').dialog('setTitle','增加新商品');            
+	$('#fm').form('clear');            
+	url = '../addOrUpdateProduct.do';        
+	}        
+function editUser(){            
+	var row = $('#dg').datagrid('getSelected');            
+	if (row){                
+		$('#dlg').dialog('open').dialog('setTitle','修改商品信息');                
+		$('#fm').form('load',row);                
+		url = 'update_user.php?id='+row.id;            
+		}        
+	}        
+	function saveUser(){            
+		$('#fm').form('submit',{                
+			url: url,                
+			onSubmit: function(){                    
+				return $(this).form('validate');                
+				},                
+				success: function(result){                    
+					var result = eval('('+result+')');                    
+					if (result.errorMsg){                        
+						$.messager.show({                            
+							title: 'Error',                            
+							msg: result.errorMsg                        
+							});                    
+							} else {                        
+								$('#dlg').dialog('close');        // close the dialog                        
+								$('#dg').datagrid('reload');    // reload the user data                    
+								}                
+								}            
+								});        
+								}        
+								function destroyUser(){            
+									var row = $('#dg').datagrid('getSelected');            
+									if (row){                
+										$.messager.confirm('注意','确定删除该项商品信息吗?',function(r){                    
+											if (r){                        
+												$.post('destroy_user.php',{id:row.id},function(result){                            
+													if (result.success){                                
+														$('#dg').datagrid('reload');    // reload the user data                            
+														} else {                                
+															$.messager.show({    // show error message                                    
+															title: 'Error',                                    
+															msg: result.errorMsg                                
+															});                            
+															}                        
+															},'json');                    
+															}                
+															});            
+															}        
+															}    
+															</script>  
+
+</body>
+</html>

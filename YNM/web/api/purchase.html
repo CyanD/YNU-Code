@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>    
+<meta charset="UTF-8">    
+<title>Basic CRUD Application - jQuery EasyUI CRUD Demo</title>    
+<link rel="stylesheet" type="text/css" href="../themes/default/easyui.css">    
+<link rel="stylesheet" type="text/css" href="../themes/icon.css">    
+<link rel="stylesheet" type="text/css" href="demo.css">    
+<script type="text/javascript" src="../jquery-1.7.2.min.js"></script>    
+<script type="text/javascript" src="../jquery.easyui.min.js"></script>
+
+
+															
+<style type="text/css">        
+#fm{            
+margin:0;            
+padding:10px 30px;        
+}        
+.ftitle{            
+font-size:14px;            
+font-weight:bold;            
+padding:5px 0;            
+margin-bottom:10px;            
+border-bottom:1px solid #ccc;        
+}        
+.fitem{            
+margin-bottom:5px;        
+}        
+.fitem label{            
+display:inline-block;            
+width:80px;        
+}    
+</style>
+
+<script type="text/javascript">
+$.ajax({
+	type : "post",
+	url : "../ProductTypelist.do",
+	dataType : "json",
+	success : function(data) {
+		//alert("data:"+data);
+		for ( var i = 0; i < data.length; i++) {
+			var topt = "<option value='"+data[i].producttypeid+"'>"
+					+ data[i].producttypename + "</option>";
+			jQuery("#pt_id").append(topt);
+		}
+	},
+	error : function(XMLHttpRequest, textStatus, errorThrown) {
+		alert(errorThrown);
+	}
+});
+</script>
+
+</head>
+
+
+<body>
+<table id="dg" title="求购信息" class="easyui-datagrid"   url="../ProductInfolist.do"  toolbar="#toolbar" pagination="true"  rownumbers="true" fitColumns="true" singleSelect="true"> 
+<thead>            
+	<tr>                
+		<th field="producttypename" width="200">商品类型</th> 
+        <th field="phead" width="200">标题</th>                
+		<th field="pdetail" width="400">描述信息</th>                
+		<th field="username" width="150">买家姓名</th>                
+	    <th field="usertel" width="150">联系电话</th>  
+	    <th field="userpos" width="150">买家位置</th>  
+	</tr>        
+</thead>  
+
+</table>
+<div id="toolbar">        
+<div style="float:left;" >
+<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newUser()">发布新信息</a>        
+<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editUser()">修改</a>        
+<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="destroyUser()">删除</a>
+</div><div style="float:right;margin-top:3px">
+<input  class="easyui-searchbox" style="width:200px;"  data-options="prompt:'请输入关键字'"></input>  
+</div>   
+</div>
+<div id="dlg" class="easyui-dialog" style="width:400px;height:380px;padding:10px 20px"            closed="true" buttons="#dlg-buttons">   
+<div class="ftitle">求购信息</div>        
+<form id="fm" method="post" action="../addOrUpdateInfo.do"> 
+<input  type="hidden" id="pi_id" name="purchaseinfo.pinfoid">          
+<div class="fitem">                <label>商品类型:</label>                <select id="pt_id" name="purchaseinfo.producttypeid"></select>         </div>         
+<div class="fitem">                <label>标题:</label>                <input id ="pi_head" name="purchaseinfo.phead">            </div>            
+<div class="fitem">                <label>描述信息:</label>                <input id = "pi_detail" name="purchaseinfo.pdetail">          </div>         
+<div class="fitem">                <label>买家姓名:</label>                <input id ="u_id" name="user.username">            </div>
+<div class="fitem">                <label>联系电话:</label>                <input id ="u_phone" name="user.telephone">            </div>
+<div class="fitem">                <label>买家位置:</label>                <input id ="u_pos" name="user.position">            </div>
+</form>    
+
+
+<div id="dlg-buttons">        
+<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveUser()">保存</a>       
+<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')">取消</a>   
+</div>  
+ <script type="text/javascript">       
+var url;        
+function newUser(){ 
+    var mainid=document.getElementById("pi_id");
+    if(mainid){
+         mainid.parentNode.removeChild(mainid);         
+    }      
+	$('#dlg').dialog('open').dialog('setTitle','发布新信息');            
+	$('#fm').form('clear');            
+	//url = 'save_user.php';        
+	}        
+function editUser(){            
+	var row = $('#dg').datagrid('getSelected');            
+	if (row){ 
+	     var lv=document.getElementById("pi_id");
+           if(lv){
+                 //lv.parentNode.removeChild(lv);         
+           }else{ 
+                  $('#first').before("<input  type='hidden' id='pi_id' name='purchaseinfo.pinfoid'>");
+           }
+            
+	   $.get('../editPurchaseInfo.do',{pinfoid:row.pinfoid},function(result){      
+					//alert(result);                       
+					if (result.obj){
+						//alert(result.obj) ;                               
+						//$('#dg').datagrid('reload');    // reload the user data          
+						//$("#id").val(datas.id);
+						var data=result.obj;
+						$("#pi_id").val(data.pinfoid);
+   						$("#pt_id").val(data.producttypeid);
+   						//$("#pt_id").find("option[text='"+datas.dep_id+"']").attr("selected",true);
+   						$("#pi_phead").val(data.phead);
+   						$("#pi_detail").val(data.pdetail); 	
+   						$("#u_id").val(data.userid); 
+   						$("#u_phone").val(data.telephone);
+   						$("#u_pos").val(data.position);              
+					} else {                                
+						$.messager.show({    // show error message                                    
+							title: 'Error',                                    
+							msg: result.errorMsg                                
+						});                            
+					}                        
+					},'json');      
+	   
+	   
+	    //url = '../editProduct.do?productid='+row.productid;              
+	               
+		$('#dlg').dialog('open').dialog('setTitle','修改信息');                
+	           
+		}        
+	}        
+	function saveUser(){            
+		$('#fm').form('submit',{                
+			url: '../addOrUpdateInfo.do',                
+			//onSubmit: function(){                    
+			//	return $(this).form('validate');                
+			//	},                
+				success: function(result){                    
+					var result = eval('('+result+')');                    
+					if (result.errorMsg){                        
+						$.messager.show({                            
+							title: 'Error',                            
+							msg: result.errorMsg                        
+							});                    
+							} else { 
+								alert("保存成功!");                        
+								$('#dlg').dialog('close');        // close the dialog                        
+								$('#dg').datagrid('reload');    // reload the user data                    
+								}                
+								}            
+								});        
+								}        
+				function destroyUser(){            
+					var row = $('#dg').datagrid('getSelected');            
+					           if (row){                
+										$.messager.confirm('注意','确定删除该信息吗?',function(r){                    
+											if (r){                        
+												$.post('../removePurchaseinfo.do',{pinfoid:row.pinfoid},function(result){                            
+													if (result.success){ 
+													    alert("删除成功!") ;                          
+														$('#dg').datagrid('reload');    // reload the user data                            
+														} else {                                
+															$.messager.show({    // show error message                                    
+															title: 'Error',                                    
+															msg: result.errorMsg                                
+															});                            
+															}                        
+															},'json');                    
+															}                
+															});            
+															}        
+															}    
+															</script>  
+
+
+</body>
+</html>

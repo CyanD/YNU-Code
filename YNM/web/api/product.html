@@ -1,0 +1,311 @@
+﻿<!DOCTYPE html>
+<html>
+<head>    
+<meta charset="UTF-8">    
+<title>Basic CRUD Application - jQuery EasyUI CRUD Demo</title>    
+<link rel="stylesheet" type="text/css" href="../themes/default/easyui.css">    
+<link rel="stylesheet" type="text/css" href="../themes/icon.css">    
+<link rel="stylesheet" type="text/css" href="demo.css">    
+<script type="text/javascript" src="../jquery-1.7.2.min.js"></script>    
+<script type="text/javascript" src="../jquery.easyui.min.js"></script>
+
+
+															
+<style type="text/css">        
+#fm{            
+margin:0;            
+padding:10px 30px;        
+}        
+.ftitle{            
+font-size:14px;            
+font-weight:bold;            
+padding:5px 0;            
+margin-bottom:10px;            
+border-bottom:1px solid #ccc;        
+}        
+.fitem{            
+margin-bottom:5px;        
+}        
+.fitem label{            
+display:inline-block;            
+width:80px;        
+}    
+</style>
+
+<script type="text/javascript">
+$.ajax({
+	type : "post",
+	url : "../ProductTypelist.do",
+	dataType : "json",
+	success : function(data) {
+		//alert("data:"+data);
+		for ( var i = 0; i < data.length; i++) {
+			var topt = "<option value='"+data[i].producttypeid+"'>"
+					+ data[i].producttypename + "</option>";
+			jQuery("#pt_id").append(topt);
+		}
+	},
+	error : function(XMLHttpRequest, textStatus, errorThrown) {
+		alert(errorThrown);
+	}
+});
+</script>
+</head>
+<body>      
+<table id="dg" title="商品信息" class="easyui-datagrid"   url="../Productlist.do"  toolbar="#toolbar" pagination="true"  rownumbers="true" fitColumns="true" singleSelect="true">        
+<thead>            
+	<tr>                
+		<th field="productname" width="50">商品名称</th>                
+		<th field="producttypename" width="50">商品类型</th>                
+		<th field="productpic" width="50">商品图片</th>                
+		<th field="productbinfo" width="150">商品简介</th>   
+		<th field="productprice" width="50">商品价格</th>                
+		<th field="productsum" width="50">商品数量</th>                
+		<th field="showtime" width="80" formatter="Common.TimeFormatter">上架时间</th>                
+		<th field="deletetime" width="80" formatter="Common.TimeFormatter">下架时间</th> 
+		<th field="username" width="50">所属卖家</th>
+	</tr>        
+</thead>    
+</table>    
+<div id="toolbar">        
+<div style="float:left;" >
+<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newUser()">增加</a>        
+<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editUser()">修改</a>        
+<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="destroyUser()">删除</a>
+</div><div style="float:right;margin-top:3px">
+<input  class="easyui-searchbox" style="width:200px;"  data-options="prompt:'请输入关键字'"></input>  
+</div>   
+</div>
+<div id="dlg" class="easyui-dialog" style="width:400px;height:380px;padding:10px 20px"  closed="true" buttons="#dlg-buttons">        
+<div class="ftitle">商品信息</div>        
+<form id="fm" method="post" action="../addOrUpdateProduct.do">  
+<input  type="hidden" id="p_id" name="product.productid">               
+<div class="fitem" id="first">                <label>商品名称:</label>                <input id="p_name" name="product.productname">            </div>            
+<div class="fitem">                <label>商品类型:</label>                <select id="pt_id" name="product.producttypeid"></select>         </div>         
+<div class="fitem">                <label>商品图片:</label>                <input id="p_pic" name="product.productpic">            </div>           
+<div class="fitem">                <label>商品简介:</label>                <input id="p_info" name="product.productbinfo">            </div>       
+<div class="fitem">                <label>商品价格:</label>                <input id="p_pri" name="product.productprice">            </div>            
+<div class="fitem">                <label>商品数量:</label>                <input id="p_sum" name="product.productsum">            </div>            
+<div class="fitem">                <label>上架时间:</label>                <input id="p_st" name="product.showtime" class="easyui-datebox">            </div>           
+<div class="fitem">                <label>下架时间:</label>                <input id="p_dt" name="product.deletetime" class="easyui-datebox">            </div>   
+<div class="fitem">                <label>所属卖家:</label>                <input id="u_id" name="product.userid">            </div>   
+</form>    
+</div>
+
+<div id="dlg-buttons">        
+<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveUser()">保存</a>       
+<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')">取消</a>   
+</div>   
+
+
+<script type="text/javascript">  
+
+var Common = {
+    //EasyUI用DataGrid用日期格式化
+    TimeFormatter: function (value) {
+           	if(value!=null){
+   			      return formartDate("yyyy-MM-dd",value.time); 					           
+   		    }else{
+  				   return "";
+   			}
+    }
+
+};
+
+
+//改变日期显示格式为yyyy-mm-dd
+$.fn.datebox.defaults.formatter = function(date){
+		var y = date.getFullYear();
+		var m = date.getMonth()+1;
+		var d = date.getDate();
+		return y+'-'+(m<10?('0'+m):m)+'-'+(d<10?('0'+d):d);
+	};
+	$.fn.datebox.defaults.parser = function(s){
+		if (!s) return new Date();
+		var ss = s.split('-');
+		var y = parseInt(ss[0],10);
+		var m = parseInt(ss[1],10);
+		var d = parseInt(ss[2],10);
+		if (!isNaN(y) && !isNaN(m) && !isNaN(d)){
+			return new Date(y,m-1,d);
+		} else {
+			return new Date();
+		}
+	};
+
+
+
+//时间格式由json转换成yyyy-mm-dd
+function formartDate(dataFormate, time) {
+    var date = new Date();
+    date.setTime(time);
+    return date.pattern(dataFormate);
+}
+Date.prototype.pattern = function(fmt) {
+    var o = {
+        "M+" : this.getMonth() + 1, //月份     
+        "d+" : this.getDate(), //日     
+        "h+" : this.getHours() % 12 == 0 ? 12 : this.getHours() % 12, //小时     
+        "H+" : this.getHours(), //小时     
+        "m+" : this.getMinutes(), //分     
+        "s+" : this.getSeconds(), //秒     
+        "q+" : Math.floor((this.getMonth() + 3) / 3), //季度     
+        "S" : this.getMilliseconds()
+    //毫秒     
+    };
+    var week = {
+        "0" : "日",
+        "1" : "一",
+        "2" : "二",
+        "3" : "三",
+        "4" : "四",
+        "5" : "五",
+        "6" : "六"
+    };
+    if (/(y+)/.test(fmt)) {
+        fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "")
+                .substr(4 - RegExp.$1.length));
+    }
+    if (/(E+)/.test(fmt)) {
+        fmt = fmt.replace(RegExp.$1,
+                ((RegExp.$1.length > 1) ? (RegExp.$1.length > 2 ? "星期" : "周")
+                        : "")
+                        + week[this.getDay() + ""]);
+    }
+    if (/(e+)/.test(fmt)) {
+        fmt = fmt.replace(RegExp.$1,
+                ((RegExp.$1.length > 1) ? (RegExp.$1.length > 2 ? "星期" : "周")
+                        : "")
+                        + this.getDay());
+    }
+    for ( var k in o) {
+        if (new RegExp("(" + k + ")").test(fmt)) {
+            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k])
+                    : (("00" + o[k]).substr(("" + o[k]).length)));
+        }
+    }
+    return fmt;
+}
+
+     
+var url;        
+function newUser(){       
+	var mainid=document.getElementById("p_id");
+    if(mainid){
+         mainid.parentNode.removeChild(mainid);         
+    }
+            
+	$('#dlg').dialog('open').dialog('setTitle','增加新商品');            
+	$('#fm').form('clear');            
+	//url = '../addOrUpdateProduct.do';        
+	}        
+function editUser(){    
+	         
+	var row = $('#dg').datagrid('getSelected');            
+	if (row){ 
+	      var lv=document.getElementById("p_id");
+           if(lv){
+                 //lv.parentNode.removeChild(lv);         
+           }else{ 
+                  $('#first').before("<input  type='hidden' id='p_id' name='product.productid'>");
+           }
+            
+	   $.get('../editProduct.do',{productid:row.productid},function(result){      
+					//alert(result);                       
+					if (result.obj){
+						//alert(result.obj) ;                               
+						//$('#dg').datagrid('reload');    // reload the user data          
+						//$("#id").val(datas.id);
+						var data=result.obj;
+						$("#p_id").val(data.productid);
+   						$("#p_name").val(data.productname);
+   						$("#pt_id").val(data.producttypeid);
+   						//$("#pt_id").find("option[text='"+datas.dep_id+"']").attr("selected",true);
+   						$("#p_pic").val(data.productpic);
+   						$("#p_info").val(data.productbinfo); 	
+   						$("#p_pri").val(data.productprice);
+   						$("#p_sum").val(data.productsum);
+   						
+   						var sdate="";
+   						if(data.showtime!=null){
+   					            sdate=formartDate("yyyy-MM-dd",data.showtime.time); 					           
+   					    }else{
+  						        sdate="";
+   					     }
+   					      //alert(sdate);
+   						$("#p_st").datebox('setValue',sdate); 	
+   						
+   						var ddate="";
+   						if(data.deletetime!=null){
+   					            ddate=formartDate("yyyy-MM-dd",data.deletetime.time);
+   					           
+   					    }else{
+  						        ddate="";
+   					     }
+   						//alert(ddate);
+   						$("#p_dt").datebox('setValue',ddate);  
+   						
+   						$("#u_id").val(data.userid);                 
+					} else {                                
+						$.messager.show({    // show error message                                    
+							title: 'Error',                                    
+							msg: result.errorMsg                                
+						});                            
+					}                        
+					},'json');      
+	   
+	   
+	    //url = '../editProduct.do?productid='+row.productid;              
+		$('#dlg').dialog('open').dialog('setTitle','修改商品信息');    
+           
+		//$('#fm').form('load',row);                
+		}        
+	}        
+	function saveUser(){  
+	       
+		$('#fm').form('submit',{                
+			url: '../addOrUpdateProduct.do',                
+//			onSubmit: function(){                    
+//				return $(this).form('validate');                
+//			},                
+			success: function(result){         
+					//alert(result);           
+					var result = eval('('+result+')');                    
+					if (result.errorMsg){                        
+						$.messager.show({                            
+							title: 'Error',                            
+							msg: result.errorMsg                        
+						});                    
+					} else {      
+					alert("保存成功!");                  
+						$('#dlg').dialog('close');        // close the dialog                        
+						$('#dg').datagrid('reload');    // reload the user data                    
+						}                
+			}            
+		});        
+	}        
+	function destroyUser(){            
+		var row = $('#dg').datagrid('getSelected');            
+		if (row){                
+			$.messager.confirm('注意','确定删除该项商品信息吗?',function(r){                    
+				if (r){                         
+					$.post('../removeProduct.do',{productid:row.productid},function(result){      
+					//alert(result);                       
+					if (result.success){
+						alert("删除成功!") ;                               
+						$('#dg').datagrid('reload');    // reload the user data                            
+					} else {                                
+						$.messager.show({    // show error message                                    
+							title: 'Error',                                    
+							msg: result.errorMsg                                
+						});                            
+					}                        
+					},'json');                    
+				}                
+			});            
+		}        
+	}    
+</script>  
+
+</body>
+</html>
